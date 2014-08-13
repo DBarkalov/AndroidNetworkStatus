@@ -1,4 +1,4 @@
-package com.diolan.wifistatelogger;
+package com.diolan.netstat;
 
 import android.app.IntentService;
 import android.content.ContentValues;
@@ -7,8 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 
-import com.diolan.wifistatelogger.data.DataEntry;
-import com.diolan.wifistatelogger.sql.StatDbHelper;
+import com.diolan.netstat.data.DataEntry;
+import com.diolan.netstat.sql.StatDbHelper;
 
 /**
  * Created by d.barkalov on 06.08.2014.

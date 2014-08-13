@@ -1,9 +1,7 @@
-package com.diolan.wifistatelogger;
+package com.diolan.netstat;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class NetStatActivity extends ActionBarActivity {
 
@@ -16,6 +14,7 @@ public class NetStatActivity extends ActionBarActivity {
                     .add(R.id.container, new NetStatFragment())
                     .commit();
         }
+        setTitle(getResources().getString(R.string.netstat_activity_title));
     }
 
 

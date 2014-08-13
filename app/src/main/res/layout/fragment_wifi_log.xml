@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.diolan.wifistatelogger.NetStatFragment">
+    tools:context="com.diolan.netstat.NetStatFragment">
 
     <ListView
         android:id="@+id/listView"

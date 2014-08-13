@@ -1,4 +1,4 @@
-package com.diolan.wifistatelogger;
+package com.diolan.netstat;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.diolan.wifistatelogger.data.DataEntry;
+import com.diolan.netstat.data.DataEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

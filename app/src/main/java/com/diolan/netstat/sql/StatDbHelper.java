@@ -1,10 +1,10 @@
-package com.diolan.wifistatelogger.sql;
+package com.diolan.netstat.sql;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.diolan.wifistatelogger.data.DataEntry;
+import com.diolan.netstat.data.DataEntry;
 
 /**
  * Created by d.barkalov on 06.08.2014.

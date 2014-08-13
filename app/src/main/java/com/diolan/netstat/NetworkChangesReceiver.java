@@ -1,4 +1,4 @@
-package com.diolan.wifistatelogger;
+package com.diolan.netstat;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,9 +10,8 @@ import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
 import android.util.Log;
 
-import com.diolan.wifistatelogger.data.DataEntry;
+import com.diolan.netstat.data.DataEntry;
 
-import java.net.InetAddress;
 import java.util.Date;
 
 /**

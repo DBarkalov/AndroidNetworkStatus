@@ -1,4 +1,4 @@
-package com.diolan.wifistatelogger;
+package com.diolan.netstat;
 
 import android.app.Application;
 

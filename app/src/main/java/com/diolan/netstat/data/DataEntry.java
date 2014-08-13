@@ -1,4 +1,4 @@
-package com.diolan.wifistatelogger.data;
+package com.diolan.netstat.data;
 
 import android.provider.BaseColumns;
 
