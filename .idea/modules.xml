@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AndroidNetworkStatus.iml" filepath="$PROJECT_DIR$/AndroidNetworkStatus.iml" />
       <module fileurl="file://$PROJECT_DIR$/Wifistatelogger.iml" filepath="$PROJECT_DIR$/Wifistatelogger.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>

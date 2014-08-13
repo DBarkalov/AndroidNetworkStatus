@@ -7,10 +7,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
 import android.util.Log;
 
 import com.diolan.wifistatelogger.data.DataEntry;
 
+import java.net.InetAddress;
 import java.util.Date;
 
 /**
@@ -36,7 +38,7 @@ public class NetworkChangesReceiver extends BroadcastReceiver {
                 WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 eventInfo+=  " ConnectionInfo=" + wifiInfo.toString();
-                eventInfo+=" IpAddress:" + wifiInfo.getIpAddress();
+                eventInfo+=" IpAddress:" + Formatter.formatIpAddress(wifiInfo.getIpAddress());
             }
 
             Intent serviceIntent = new Intent(context, DatabaseService.class);

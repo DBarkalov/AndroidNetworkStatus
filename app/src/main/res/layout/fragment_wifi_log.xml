@@ -2,21 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.diolan.wifistatelogger.NetStatFragment"
     android:orientation="vertical"
-    >
-
-    <Button
-        android:id="@+id/button_clear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/clear"
-        android:paddingBottom="20dp"
-        />
+    tools:context="com.diolan.wifistatelogger.NetStatFragment">
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/listView"
-    />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

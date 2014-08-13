@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -21,7 +24,7 @@ import java.util.List;
 
 public class NetStatFragment extends Fragment implements ChangesObservable.ChangesObserver {
 
-    private static String TAG = "WiFiFragment";
+    private static String TAG = "NetStatFragment";
 
     private NetStatListAdapter mAdapter;
 
@@ -32,6 +35,7 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -42,15 +46,24 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.action_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_clear) {
+            clearAll();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        view.findViewById(R.id.button_clear).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearAll();
-            }
-        });
 
         ListView listView = (ListView) view.findViewById(R.id.listView);
         mAdapter = new NetStatListAdapter(getActivity());
