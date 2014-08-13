@@ -4,5 +4,7 @@
     <string name="app_name">Network Status</string>
     <string name="netstat_activity_title">Network Status Log</string>
     <string name="action_clear">Clear log</string>
+    <string name="alert_dialog_ok">OK</string>
+    <string name="alert_dialog_cancel">Cancel</string>
 
 </resources>

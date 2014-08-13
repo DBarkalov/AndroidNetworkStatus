@@ -1,10 +1,12 @@
 package com.diolan.netstat;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,8 +27,8 @@ import java.util.List;
 public class NetStatFragment extends Fragment implements ChangesObservable.ChangesObserver {
 
     private static String TAG = "NetStatFragment";
-
     private NetStatListAdapter mAdapter;
+    public static final int DLG_REQUEST_CLEAN = 2735;
 
 
     public NetStatFragment() {
@@ -55,11 +57,18 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_clear) {
-            clearAll();
+            showConfirmDialog();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void showConfirmDialog() {
+        DialogFragment newFragment = ConfirmDialog.newInstance(R.string.action_clear);
+        newFragment.setTargetFragment(this, DLG_REQUEST_CLEAN);
+        newFragment.show(getFragmentManager(), "yes_no_dialog");
+    }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -160,5 +169,12 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == DLG_REQUEST_CLEAN && resultCode == Activity.RESULT_OK){
+            clearAll();
+        }
+    }
 }
