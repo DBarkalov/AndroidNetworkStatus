@@ -84,6 +84,7 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
     public void onResume() {
         super.onResume();
         final ChangesObservable changesObservable = ((App) getActivity().getApplicationContext()).getChangesObservable();
+        //TODO USE ContentResolver Notifications
         changesObservable.registerObserver(this);
     }
 
@@ -91,6 +92,7 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
     public void onPause() {
         super.onPause();
         final ChangesObservable changesObservable = ((App) getActivity().getApplicationContext()).getChangesObservable();
+        //TODO USE ContentResolver Notifications
         changesObservable.unregisterObserver(this);
     }
 
@@ -114,6 +116,7 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
     }
 
 
+    //TODO USE Loader  and ContentResolver
     private static class LoadCaptchaTask extends AsyncTask<Void, Void, List<DataEntry>>{
         private final SQLiteDatabase db;
         private final WeakReference<NetStatFragment> mFragmentWeakReference;

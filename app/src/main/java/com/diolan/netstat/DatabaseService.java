@@ -48,9 +48,8 @@ public class DatabaseService extends IntentService {
     }
 
     private long removeAll() {
-        StatDbHelper dbHelper = new StatDbHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        return db.delete(DataEntry.TABLE_NAME, "1", null);
+        this.getContentResolver().delete(DataEntry.CONTENT_URI,null, null);
+        return 1;
     }
 
 
@@ -63,20 +62,15 @@ public class DatabaseService extends IntentService {
     }
 
     private long saveEntry(DataEntry dataEntry){
-        StatDbHelper dbHelper = new StatDbHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(DataEntry.COLUMN_NAME_TIME, dataEntry.getEventTime());
         values.put(DataEntry.COLUMN_NAME_EVENT, dataEntry.getEvent());
         values.put(DataEntry.COLUMN_NAME_INFO, dataEntry.getInfo());
 
-        long newRowId = db.insert(
-                DataEntry.TABLE_NAME,
-                null,
-                values);
+        this.getContentResolver().insert(DataEntry.CONTENT_URI,values);
 
-        return newRowId;
+        return 1;
     }
 
     private void sendNotificationToMainThread(){
@@ -85,6 +79,7 @@ public class DatabaseService extends IntentService {
         mHandler.sendMessage(m);
     }
 
+    //TODO USE ContentResolver Notifications
     private static class NotificationHandler extends Handler {
 
         private final ChangesObservable mChangesObservable;
