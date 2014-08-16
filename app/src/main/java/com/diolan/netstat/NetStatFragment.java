@@ -3,12 +3,12 @@ package com.diolan.netstat;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,17 +18,17 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.diolan.netstat.data.DataEntry;
-import com.diolan.netstat.sql.StatDbHelper;
+import com.diolan.netstat.data.DatabaseService;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetStatFragment extends Fragment implements ChangesObservable.ChangesObserver {
+public class NetStatFragment extends Fragment implements  LoaderManager.LoaderCallbacks<Cursor> {
 
     private static String TAG = "NetStatFragment";
     private NetStatListAdapter mAdapter;
     public static final int DLG_REQUEST_CLEAN = 2735;
+    private static final int STAT_LOADER_ID = 0;
 
 
     public NetStatFragment() {
@@ -44,6 +44,7 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_wifi_log, container, false);
+        getLoaderManager().initLoader(STAT_LOADER_ID, null, this);
         return rootView;
     }
 
@@ -77,31 +78,8 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
         ListView listView = (ListView) view.findViewById(R.id.listView);
         mAdapter = new NetStatListAdapter(getActivity());
         listView.setAdapter(mAdapter);
-        onChanged();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        final ChangesObservable changesObservable = ((App) getActivity().getApplicationContext()).getChangesObservable();
-        //TODO USE ContentResolver Notifications
-        changesObservable.registerObserver(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        final ChangesObservable changesObservable = ((App) getActivity().getApplicationContext()).getChangesObservable();
-        //TODO USE ContentResolver Notifications
-        changesObservable.unregisterObserver(this);
-    }
-
-    @Override
-    public void onChanged() {
-        Log.d(TAG, "onChanged()");
-        //TODO cancel task
-        new LoadCaptchaTask(this).execute();
-    }
 
     protected void updateListAdapter(final List<DataEntry> list){
         if(isAdded()){
@@ -115,61 +93,55 @@ public class NetStatFragment extends Fragment implements ChangesObservable.Chang
         getActivity().startService(serviceIntent);
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case STAT_LOADER_ID:
 
-    //TODO USE Loader  and ContentResolver
-    private static class LoadCaptchaTask extends AsyncTask<Void, Void, List<DataEntry>>{
-        private final SQLiteDatabase db;
-        private final WeakReference<NetStatFragment> mFragmentWeakReference;
+                String[] projection = {
+                        DataEntry.COLUMN_NAME_TIME,
+                        DataEntry.COLUMN_NAME_EVENT,
+                        DataEntry.COLUMN_NAME_INFO
+                };
 
-        LoadCaptchaTask(NetStatFragment fragment){
-            this.mFragmentWeakReference = new WeakReference<NetStatFragment>(fragment);
-            StatDbHelper dbHelper = new StatDbHelper(fragment.getActivity());
-            this.db = dbHelper.getReadableDatabase();
+                String sortOrder = DataEntry.COLUMN_NAME_TIME + " DESC";
+
+                return new CursorLoader(
+                        getActivity(),   // Parent activity context
+                        DataEntry.CONTENT_URI,        // uri
+                        projection,     // Projection to return
+                        null,            // No selection clause
+                        null,            // No selection arguments
+                        sortOrder             // Default sort order
+                );
+            default:
+                // An invalid id was passed in
+                return null;
         }
+    }
 
-        @Override
-        protected List<DataEntry> doInBackground(Void... params) {
-
-            String[] projection = {
-                    DataEntry.COLUMN_NAME_TIME,
-                    DataEntry.COLUMN_NAME_EVENT,
-                    DataEntry.COLUMN_NAME_INFO
-            };
-
-            String sortOrder = DataEntry.COLUMN_NAME_TIME + " DESC";
-
-            Cursor c = db.query(
-                    DataEntry.TABLE_NAME,  // The table to query
-                    projection,                               // The columns to return
-                    null,                                // The columns for the WHERE clause
-                    null,                            // The values for the WHERE clause
-                    null,                                     // don't group the rows
-                    null,                                     // don't filter by row groups
-                    sortOrder                                 // The sort order
-            );
-
-            List<DataEntry> list= new ArrayList<DataEntry>();
-
-            if(c != null){
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+        if (loader.getId() == STAT_LOADER_ID) {
+            List<DataEntry> list = new ArrayList<DataEntry>();
+            if (c != null) {
                 c.moveToFirst();
                 while (!c.isAfterLast()) {
-                    list.add( new DataEntry(
-                    c.getLong(c.getColumnIndex(DataEntry.COLUMN_NAME_TIME)),
-                    c.getString(c.getColumnIndex(DataEntry.COLUMN_NAME_EVENT)),
-                    c.getString(c.getColumnIndex(DataEntry.COLUMN_NAME_INFO))));
+                    list.add(new DataEntry(
+                            c.getLong(c.getColumnIndex(DataEntry.COLUMN_NAME_TIME)),
+                            c.getString(c.getColumnIndex(DataEntry.COLUMN_NAME_EVENT)),
+                            c.getString(c.getColumnIndex(DataEntry.COLUMN_NAME_INFO))));
                     c.moveToNext();
                 }
-                c.close();
+                //c.close(); do not close ! Loader menage it
             }
-            return list;
+            updateListAdapter(list);
         }
+    }
 
-        @Override
-        protected void onPostExecute(List<DataEntry> list) {
-            if(mFragmentWeakReference.get() != null){
-                mFragmentWeakReference.get().updateListAdapter(list);
-            }
-        }
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        //release previous cursor
     }
 
     @Override
