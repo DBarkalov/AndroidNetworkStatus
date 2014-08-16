@@ -3,8 +3,6 @@ package com.diolan.netstat.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import com.diolan.netstat.sql.NetStatContentProvider;
-
 import java.io.Serializable;
 
 /**

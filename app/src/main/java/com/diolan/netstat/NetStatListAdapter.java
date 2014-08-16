@@ -29,6 +29,9 @@ public class NetStatListAdapter extends BaseAdapter {
     }
 
     public void update(List<DataEntry> list) {
+        if(list == null){
+            throw new IllegalArgumentException("list must be not null");
+        }
         mEntries = list;
         notifyDataSetChanged();
     }
