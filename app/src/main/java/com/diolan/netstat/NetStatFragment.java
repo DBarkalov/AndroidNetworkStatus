@@ -21,7 +21,9 @@ import com.diolan.netstat.data.DataEntry;
 import com.diolan.netstat.data.DatabaseService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class NetStatFragment extends Fragment implements  LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -38,6 +40,11 @@ public class NetStatFragment extends Fragment implements  LoaderManager.LoaderCa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if(savedInstanceState != null){
+            mAdapter = new NetStatListAdapter(getActivity(), (HashSet<DataEntry>)savedInstanceState.getSerializable(NetStatListAdapter.SELECTION_STATE));
+        } else {
+            mAdapter = new NetStatListAdapter(getActivity());
+        }
     }
 
     @Override
@@ -74,9 +81,7 @@ public class NetStatFragment extends Fragment implements  LoaderManager.LoaderCa
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         ListView listView = (ListView) view.findViewById(R.id.listView);
-        mAdapter = new NetStatListAdapter(getActivity());
         listView.setAdapter(mAdapter);
     }
 
@@ -142,6 +147,12 @@ public class NetStatFragment extends Fragment implements  LoaderManager.LoaderCa
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         //release previous cursor
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mAdapter.onSaveInstanceState(outState);
     }
 
     @Override
